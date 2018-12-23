@@ -93,7 +93,7 @@ function render(){
             if(closedSet.includes(adjacent))
                 continue;
 
-            //Distance from current to adjacent node.
+            //Distance from current to adjacent node..
             let r = Math.pow(adjacent.x - current.x,2) + Math.pow(adjacent.y - current.y,2)
             let tentativeGscore = current.g + Math.sqrt(r);
             //let tentativeGscore = current.g + 1;
