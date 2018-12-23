@@ -10,7 +10,7 @@ let nodes;
 
 let openSet = [];
 let closedSet = [];
-var path = [];
+var path;
 
 let goal;
 
@@ -28,7 +28,7 @@ function constructPath(current){
 
 function remove(array, value){
     for(let i=array.length-1; i>=0; i--){
-        if(array[i] === value)
+        if(array[i] == value)
             array.splice(i,1);
     }
 }
@@ -69,7 +69,7 @@ function render(){
     if(openSet.length > 0){
         let index = 0;
         for(let i=0; i<openSet.length; i++){
-            if(openSet[i] < openSet[index]){
+            if(openSet[i].f < openSet[index].f){
                 index = i;
             }
         }
@@ -80,33 +80,35 @@ function render(){
             console.log(path.length);
             cancelAnimationFrame(reqId);
         }
-        else{
-            remove(openSet,current);
-            closedSet.push(current);
-    
-            //checking adjacents nodes of the current node.
-            for(let i=0; i<current.adjacents.length; i++){
-                //console.log("entro a vecinos");
-    
-                let adjacent = current.adjacents[i];
-                
-                if(closedSet.includes(adjacent))
-                    continue;
-    
-                //Distance from current to adjacent node.
-                let tentativeGscore = current.g + 1;
-    
-                if(!openSet.includes(adjacent))
-                    openSet.push(adjacent);
-                else if(tentativeGscore >= adjacent.g)
-                    continue;
-    
-                adjacent.parent = current;
-                adjacent.g = tentativeGscore;
-                adjacent.f = adjacent.g + (Math.abs(adjacent.x - goal.x) + Math.abs(adjacent.y - goal.y));
-            }
-        }
+        
+        remove(openSet,current);
+        closedSet.push(current);
 
+        //checking adjacents nodes of the current node.
+        for(let i=0; i<current.adjacents.length; i++){
+            //console.log("entro a vecinos");
+
+            let adjacent = current.adjacents[i];
+            
+            if(closedSet.includes(adjacent))
+                continue;
+
+            //Distance from current to adjacent node.
+            let r = Math.pow(adjacent.x - current.x,2) + Math.pow(adjacent.y - current.y,2)
+            let tentativeGscore = current.g + Math.sqrt(r);
+            //let tentativeGscore = current.g + 1;
+
+            if(!openSet.includes(adjacent))
+                openSet.push(adjacent);
+            else if(tentativeGscore >= adjacent.g)
+                continue;
+
+            adjacent.parent = current;
+            adjacent.g = tentativeGscore;
+            //adjacent.f = adjacent.g + (Math.abs(adjacent.x - goal.x) + Math.abs(adjacent.y - goal.y));
+            adjacent.f = adjacent.g + Math.sqrt(Math.pow(adjacent.x - goal.x,2) + Math.pow(adjacent.y - goal.y,2));
+            
+        }
     }
 
     for(let i=0; i<openSet.length; i++)
@@ -118,7 +120,7 @@ function render(){
     constructPath(current);
 
     for(let i=0; i<path.length; i++)
-        path[i].draw(context,"black");
+        path[i].draw(context,"yellow");
 
 }
 

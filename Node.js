@@ -22,5 +22,10 @@ class Node{
         if(this.y < rows-1){ this.adjacents.push(nodes[this.x][this.y+1]); }
         if(this.x > 0){ this.adjacents.push(nodes[this.x-1][this.y]); }
         if(this.y > 0){ this.adjacents.push(nodes[this.x][this.y-1]); }
+        
+        if(this.x > 0 && this.y > 0){ this.adjacents.push(nodes[this.x-1][this.y-1]); }
+        if(this.x < cols-1 && this.y > 0){ this.adjacents.push(nodes[this.x+1][this.y-1]); }
+        if(this.x > 0 && this.y < rows-1){ this.adjacents.push(nodes[this.x-1][this.y+1]); }
+        if(this.x < cols-1 && this.y < rows-1){ this.adjacents.push(nodes[this.x+1][this.y+1]); }
     }
 }
