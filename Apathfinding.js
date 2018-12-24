@@ -47,8 +47,8 @@ function setup(){
 
     for(let x=0; x<cols; x++){
         for(let y=0; y<rows; y++){
-            nodes[x][y] = new Node(x, y, wi,he);
-            nodes[x][y].draw(context,"white");
+            nodes[x][y] = new Node(x, y, x * wi, y * he, wi,he);
+            //nodes[x][y].draw(context,"white");
         }
     }
 
@@ -59,6 +59,15 @@ function setup(){
     }
 
     goal = nodes[cols-1][rows-1];
+
+    nodes[0][0].isAWall = false;
+    goal.isAWall = false;
+
+    for(let x=0; x<cols; x++){
+        for(let y=0; y<rows; y++){
+            nodes[x][y].draw(context,"white");
+        }
+    }
  
     openSet.push(nodes[0][0]);
 }
@@ -90,7 +99,7 @@ function render(){
 
             let adjacent = current.adjacents[i];
             
-            if(closedSet.includes(adjacent))
+            if(closedSet.includes(adjacent) || adjacent.isAWall)
                 continue;
 
             //Distance from current to adjacent node..
@@ -109,6 +118,11 @@ function render(){
             adjacent.f = adjacent.g + Math.sqrt(Math.pow(adjacent.x - goal.x,2) + Math.pow(adjacent.y - goal.y,2));
             
         }
+    }
+    else{
+        console.log("No hay camino");
+        cancelAnimationFrame(reqId);
+        return;
     }
 
     for(let i=0; i<openSet.length; i++)
