@@ -1,5 +1,5 @@
-let canvas;
-let context;
+let canvas = document.getElementById("canvas");
+let context = canvas.getContext("2d");
 
 let wi;
 let he;
@@ -8,8 +8,8 @@ let cols = 25;
 let rows = 25;
 let nodes;
 
-let openSet = [];
-let closedSet = [];
+let openSet;
+let closedSet;
 var path;
 
 let goal;
@@ -26,6 +26,12 @@ function constructPath(current){
     }
 }
 
+function heuristic(nodeA, nodeB){
+    //Manhattan distance
+    //(Math.abs(nodeA.x - nodeB.x) + Math.abs(nodeA.y - nodeB.y));
+    return Math.sqrt(Math.pow(nodeA.x - nodeB.x,2) + Math.pow(nodeA.y - nodeB.y,2));
+}
+
 function remove(array, value){
     for(let i=array.length-1; i>=0; i--){
         if(array[i] == value)
@@ -34,10 +40,10 @@ function remove(array, value){
 }
 
 function setup(){
-    canvas = document.getElementById("canvas");
-    context = canvas.getContext("2d");
     wi = canvas.width/cols;
     he = canvas.height/rows;
+    openSet = [];
+    closedSet = [];
 
     nodes = new Array(cols);
 
@@ -48,7 +54,6 @@ function setup(){
     for(let x=0; x<cols; x++){
         for(let y=0; y<rows; y++){
             nodes[x][y] = new Node(x, y, x * wi, y * he, wi,he);
-            //nodes[x][y].draw(context,"white");
         }
     }
 
@@ -103,8 +108,7 @@ function render(){
                 continue;
 
             //Distance from current to adjacent node..
-            let r = Math.pow(adjacent.x - current.x,2) + Math.pow(adjacent.y - current.y,2)
-            let tentativeGscore = current.g + Math.sqrt(r);
+            let tentativeGscore = current.g + heuristic(adjacent,current);
             //let tentativeGscore = current.g + 1;
 
             if(!openSet.includes(adjacent))
@@ -114,13 +118,12 @@ function render(){
 
             adjacent.parent = current;
             adjacent.g = tentativeGscore;
-            //adjacent.f = adjacent.g + (Math.abs(adjacent.x - goal.x) + Math.abs(adjacent.y - goal.y));
-            adjacent.f = adjacent.g + Math.sqrt(Math.pow(adjacent.x - goal.x,2) + Math.pow(adjacent.y - goal.y,2));
+            adjacent.f = adjacent.g + heuristic(adjacent,goal);
             
         }
     }
     else{
-        console.log("No hay camino");
+        console.log("No path");
         cancelAnimationFrame(reqId);
         return;
     }
@@ -139,4 +142,4 @@ function render(){
 }
 
 setup();
-render();
+//render();
