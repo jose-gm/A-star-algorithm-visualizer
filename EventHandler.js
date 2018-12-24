@@ -11,6 +11,7 @@ start.addEventListener("click", () => {
 });
 
 restart.addEventListener("click", () => {
+    stopLoop();
     setup();
     start.disabled = false;
 });

@@ -4,8 +4,8 @@ let context = canvas.getContext("2d");
 let wi;
 let he;
 
-let cols = 25;
-let rows = 25;
+let cols = 35;
+let rows = 35;
 let nodes;
 
 let openSet;
@@ -37,6 +37,10 @@ function remove(array, value){
         if(array[i] == value)
             array.splice(i,1);
     }
+}
+
+function stopLoop(){
+    cancelAnimationFrame(reqId);
 }
 
 function setup(){
@@ -92,7 +96,8 @@ function render(){
 
         if(current === goal){  
             console.log(path.length);
-            cancelAnimationFrame(reqId);
+            stopLoop();
+            //cancelAnimationFrame(reqId);
         }
         
         remove(openSet,current);
